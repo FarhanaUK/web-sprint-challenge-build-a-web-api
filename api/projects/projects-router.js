@@ -2,12 +2,18 @@
 const express = require('express')
 
 const Project = require('./projects-model')
+const Actions = require('../actions/actions-model')
 
 const router = express.Router()
 
 
-router.get('/', (req,res) => {
-
+router.get('/', async(req,res) => {
+const projects = await Project.get()
+if(!projects || projects.length === 0){
+res.send([])
+}else{
+    res.json(projects)
+}
 })
 
 router.get('/:id', (req,res) => {
