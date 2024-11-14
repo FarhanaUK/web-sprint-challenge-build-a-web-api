@@ -1,14 +1,16 @@
 const express = require('express');
 const server = express();
 const projectsRouter = require('./projects/projects-router')
+const actionRouter = require('./actions/actions-router')
 
 server.use(express.json())
 server.use('/api/projects', projectsRouter)
+server.use('/api/actions', actionRouter);
 
 
 
 server.get('/', (req, res) => {
-    res.send(`<h1>Lets build this project`)
+    res.send(`<h1>Lets build this project</h1>`)
 })
 module.exports = server;
 
