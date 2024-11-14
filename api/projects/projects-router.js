@@ -21,8 +21,12 @@ router.get('/:id', validateById,(req,res) => {
  res.json(req.body)
 })
 
-router.post('/:id', (req, res, next) => {
-    Project.insert({name: req.body.name})
+router.post('/', validateProjectData,(req, res, next) => {
+    Project.insert({
+        name: req.body.name,
+        description: req.body.description,
+        completed: req.body.completed || false,
+    })
     .then(newProject => {
      res.status(201).json(newProject)
     })
