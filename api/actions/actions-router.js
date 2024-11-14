@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
   });
   
   router.get("/:id", validateById, (req, res) => {
-    res.json(req.body);
+    res.json(req.action);
   });
   
   router.post("/", validateActionData, async(req, res, next) => {
@@ -45,7 +45,10 @@ Actions.insert({
   });
   
   router.put("/:id", validateActionData, validateById, async (req, res, next) => {
-      try {
+    console.log('ID:', req.params.id);  // Log the ID
+    console.log('Changes:', req.body);    
+    
+    try {
         const updated = await Actions.update(req.params.id, req.body);
         if (!updated) {
           return res.status(404).json({

@@ -12,7 +12,7 @@ function validateActionData(req, res, next) {
       });
     }
     if(description.length > 128) {
-        res.status(400).json({
+        return res.status(400).json({
              message: "'description' must be 128 characters or less."
         })
     }
@@ -28,7 +28,7 @@ function validateActionData(req, res, next) {
       if (!action) {
         return next({ status: 404, message: "action not found" });
       } else {
-        req.body = action
+        req.action = action
         next();
       }
     } catch (err) {
