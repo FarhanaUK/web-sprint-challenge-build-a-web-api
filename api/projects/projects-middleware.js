@@ -1,18 +1,27 @@
 // add middlewares here related to projects
 const Project = require('./projects-model')
 
-function validateProjectData(req, res, next) {
-  const { name, description, completed } = req.body;
 
-  if (!name || !description) {
-    return res.status(400).json({
-      message:
-        "Missing required fields: 'name' and 'description' are required.",
-    });
+function convertToNumber(val) {
+  if (typeof val === "boolean") {
+    return +val;
+  } else {
+    return val;
   }
-  if (completed === undefined) {
-    req.body.completed = false;
+
+}
+
+
+function validateProjectData(req, res, next) {
+
+  
+  const { name, description, completed } = req.body;
+  const convertedCompleted = convertToNumber(completed);
+  if (!name || !description || typeof convertedCompleted !== "number") {
+    return res.status(400).json({ message: "Missing required fields" });
   }
+  
+
   next();
 }
 
@@ -22,7 +31,7 @@ async function validateById(req, res, next) {
     if (!project) {
       return next({ status: 404, message: "project not found" });
     } else {
-      req.body = project
+      req.project = project
       next();
     }
   } catch (err) {

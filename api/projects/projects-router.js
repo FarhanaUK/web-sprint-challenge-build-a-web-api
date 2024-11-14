@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", validateById, (req, res) => {
-  res.json(req.body);
+  res.json(req.project);
 });
 
 router.post("/", validateProjectData, (req, res, next) => {
@@ -35,17 +35,22 @@ router.post("/", validateProjectData, (req, res, next) => {
     .catch(next);
 });
 
-router.put("/:id", validateProjectData, validateById, (req, res, next) => {
-  Project.update(req.params.id, req.body)
+router.put("/:id", validateProjectData, validateById, async(req, res, next) => {
+  try {
+    const updated = await Project.update(req.params.id, req.body);
+    if (!updated) {
+    
+      return res.status(400).json({
+        message: "Project not found.",
+      });
+    }
 
-    .then(() => {
-      return Project.get(req.params.id);
-    })
-    .then((project) => {
-      res.json(project);
-    })
-    .catch(next);
-});
+    res.json(updated);
+  } catch (err) {
+    next(err);
+  }
+}
+);
 
 router.delete("/:id", validateById, async (req, res, next) => {
   try {
